@@ -1,0 +1,69 @@
+* {
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  text-decoration: inherit;
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-callout: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  cursor: inherit;
+  touch-action: manipulation;
+  text-align: inherit;
+  border-collapse: collapse;
+  white-space: inherit;
+  overflow: visible;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+html {
+  color: white;
+  background: black;
+  font-family: sans-serif;
+  cursor: default;
+  white-space: nowrap;
+  line-height: 100%;
+  width: 100%;
+  height: 100%;
+  font-size: 0.625cm;
+}
+
+::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #282828;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #333;
+}
+
+::-webkit-scrollbar-corner { 
+  background: #080808; 
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+.enabled.button {
+  cursor: pointer;
+}
