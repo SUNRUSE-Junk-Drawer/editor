@@ -12,6 +12,8 @@ import {
     Server as wsServer
 } from "ws"
 
+import "./database"
+
 const app = express()
 app.use(express.static(pathJoin(__dirname, "../../dist")))
 
