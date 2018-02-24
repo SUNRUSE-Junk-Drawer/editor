@@ -64,6 +64,19 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.enabled.button {
-  cursor: pointer;
+button {
+    color: #AAA;
+}
+
+button:disabled {
+    color: #555;
+}
+
+button:not(:disabled):hover {
+    color: #DDD;
+    cursor: pointer;
+}
+
+button:not(:disabled):active {
+    color: #FFF;
 }
