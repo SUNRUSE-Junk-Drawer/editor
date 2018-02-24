@@ -6,7 +6,7 @@ import {
 
 import {
     databaseDataById,
-    databaseChildrenById
+    databaseParentFolderIdIndex
 } from "./../database"
 
 import {
@@ -33,7 +33,7 @@ export default {
         return <div class="folder-thumbnail">📁&#xFE0E;</div>
     },
     editorView(id, data) {
-        return <div class="folder">{databaseChildrenById[id].map(childId => {
+        return <div class="folder">{(databaseParentFolderIdIndex.idsByValue[id] || []).map(childId => {
             const data = databaseDataById[childId]
             if (!data) return <button class="folder-item" disabled>
                 <div class="folder-item-thumbnail"></div>

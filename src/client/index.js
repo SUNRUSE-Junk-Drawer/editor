@@ -4,7 +4,9 @@ import state from "./state"
 import {
     databaseRefresh,
     databasePatch,
-    databaseDataById
+    databaseDataById,
+    databaseTypeIndex,
+    databaseParentFolderIdIndex
 } from "./database";
 
 let socket
@@ -23,6 +25,10 @@ addEventListener("load", () => {
         const message = JSON.parse(event.data)
         switch (message.type) {
             case "refresh": {
+                if (message.indices) {
+                    databaseTypeIndex.initialize(message.indices.type)
+                    databaseParentFolderIdIndex.initialize(message.indices.parentFolderId)
+                }
                 if (message.show) {
                     state.state = "ready"
                     state.id = message.id
