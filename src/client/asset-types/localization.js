@@ -21,7 +21,7 @@ export default {
         return <div>
             <div class="field">
                 <label for={`editor-${id}-name`}>Name: </label>
-                <input id={`editor-${id}-name`} value={data.data.name || ""} onchange={e => indexPatch(id, { data: { name: e.target.value } })} />
+                <input id={`editor-${id}-name`} type="text" value={data.data.name || ""} onchange={e => indexPatch(id, { data: { name: e.target.value } })} />
             </div>
         </div>
     }
