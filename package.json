@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "npm install && webpack && npm-run-all --parallel host-server watch-webpack",
+        "start": "npm install && npm-run-all --parallel host-server watch-webpack",
         "host-server": "node ./src/server/index.js",
         "watch-webpack": "webpack -w"
     },
