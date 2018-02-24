@@ -29,6 +29,21 @@ socketServer.on("connection", (socket, request) => {
     socket.on("message", event => {
         const message = JSON.parse(event)
         console.log(`Received: ${message}`)
+        switch (message.type) {
+            case "get": {
+                console.log(`\tHandling get...`)
+                socket.send(JSON.stringify({
+                    type: "refresh",
+                    id: message.id,
+                    data: databaseDataById[message.id],
+                    children: databaseGetChildren(message.id, "\t")
+                }))
+                console.log(`\tDone.`)
+            } break
+            default: {
+                console.log(`\tUnexpected message type "${message.type}"`)
+            } break
+        }
     })
     socket.send(JSON.stringify({
         type: "refresh",
