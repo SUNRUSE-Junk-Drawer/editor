@@ -42,7 +42,7 @@ function serverInitialize(then) {
                 } break
                 case "create": {
                     console.log(`\tHandling create...`)
-                    databaseCreate(message.assetType, message.parentFolderId, "\t", id => {
+                    databaseCreate(message.assetType, message.name, message.parentFolderId, "\t", id => {
                         console.log("\tDone.")
                     })
                 } break

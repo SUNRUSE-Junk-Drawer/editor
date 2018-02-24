@@ -52,7 +52,7 @@ function databaseInitialize(then) {
                             console.log(`\t\tRead "${absoluteFilename}", parsing...`)
                             const parsed = JSON.parse(data)
                             const id = relativeFilename.split(".")[0]
-                            console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} with parent folder ID ${parsed.parentFolderId}), indexing...`)
+                            console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} "${parsed.name}" with parent folder ID ${parsed.parentFolderId}), indexing...`)
                             indices.forEach(index => index.informOfChange(id, parsed, "\t\t\t\t"))
                             console.log(`\t\t\t\tDone.`)
                             console.log(`\t\t\tDone.`)
@@ -72,7 +72,7 @@ function databaseInitialize(then) {
                         afterCheckingRootFolder()
                     } else {
                         console.log("\tThe root folder does not exist.")
-                        databaseCreate("folder", null, "\t", afterCheckingRootFolder)
+                        databaseCreate("folder", "Root", null, "\t", afterCheckingRootFolder)
                     }
 
                     function afterCheckingRootFolder() {
@@ -85,19 +85,20 @@ function databaseInitialize(then) {
     })
 }
 
-function databaseCreate(type, parentFolderId, logPrefix, then) {
+function databaseCreate(type, name, parentFolderId, logPrefix, then) {
     const id = uuidV4()
-    console.log(`${logPrefix}Creating ${type} ${id} with parent folder ID ${parentFolderId}...`)
+    console.log(`${logPrefix}Creating ${type} ${id} "${name}" with parent folder ID ${parentFolderId}...`)
 
     const data = {
         type: type,
+        name: name,
         parentFolderId: parentFolderId,
         data: {}
     }
 
     fsWriteFile(pathJoin(dataDirectory, `${id}.json`), jsonStableStringify(data), err => {
-        if (err) throw new Error(`Failed to create a file to represent ${type} ${id}: "${err}"`)
-        console.log(`${logPrefix}\tFile written for ${type} ${id}, indexing...`)
+        if (err) throw new Error(`Failed to create a file to represent ${type} ${id} "${name}": "${err}"`)
+        console.log(`${logPrefix}\tFile written for ${type} ${id} "${name}", indexing...`)
         indices.forEach(index => index.informOfChange(id, data, `${logPrefix}\t\t`))
         console.log(`${logPrefix}\t\tDone.`)
         console.log(`${logPrefix}\tDone.`)
