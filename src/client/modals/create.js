@@ -15,31 +15,31 @@ import {
 
 import assetTypes from "./../asset-types/index"
 
-function changeType(modalState, to) {
-    modalState.type = to
+function changeType(modal, to) {
+    modal.state.type = to
     refreshDom()
 }
 
-function changeName(modalState, to) {
-    modalState.name = to
+function changeName(modal, to) {
+    modal.state.name = to
     refreshDom()
 }
 
 export default {
     title: "Create Asset",
-    view(modalState) {
+    view(modal) {
         return <div>
             <div class="field">
-                <label for={`modal-create-${modalState.id}-type`}>Type: </label>
-                <select id={`modal-create-${modalState.id}-type`} value={modalState.type} onchange={e => changeType(modalState, e.target.value)}>{Object
+                <label for={`modal-create-${modal.id}-type`}>Type: </label>
+                <select id={`modal-create-${modal.id}-type`} value={modal.state.type} onchange={e => changeType(modal, e.target.value)}>{Object
                     .keys(assetTypes)
                     .sort((a, b) => assetTypes[a].label.localeCompare(assetTypes[b].label))
                     .map(type => <option value={type}>{assetTypes[type].label}</option>)
                 }</select>
             </div>
             <div class="field">
-                <label for={`modal-create-${modalState.id}-name`}>Name: </label>
-                <input id={`modal-create-${modalState.id}-name`} value={modalState.name} onchange={e => changeName(modalState, e.target.value)} />
+                <label for={`modal-create-${modal.id}-name`}>Name: </label>
+                <input id={`modal-create-${modal.id}-name`} value={modal.state.name} onchange={e => changeName(modal, e.target.value)} />
             </div>
         </div>
     },
