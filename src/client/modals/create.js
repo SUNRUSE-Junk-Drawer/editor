@@ -49,7 +49,6 @@ export default {
             indexCreate(
                 modalState.type,
                 modalState.name,
-                state.id,
                 databaseDataById[state.id].type == "folder"
                     ? state.id
                     : databaseDataById[state.id].parentFolderId
