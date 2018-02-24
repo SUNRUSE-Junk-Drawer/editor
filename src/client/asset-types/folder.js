@@ -13,6 +13,10 @@ import {
     indexGet
 } from "./../index"
 
+import state from "./../state"
+
+import refreshDom from "./../refresh-dom"
+
 import assetTypes from "./index"
 
 function itemClicked(id) {
