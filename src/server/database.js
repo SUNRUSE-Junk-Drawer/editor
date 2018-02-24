@@ -1,87 +1,88 @@
 import {
-    existsSync as fsExistsSync,
-    readdirSync as fsReaddirSync,
-    mkdirSync as fsMkdirSync,
-    writeFileSync as fsWriteFileSync,
-    readFileSync as fsReadFileSync
+    readdir as fsReaddir,
+    readFile as fsReadFile
 } from "fs"
 
 import {
     join as pathJoin
 } from "path"
 
-import {
-    v4 as uuidV4
-} from "uuid"
-
-import jsonStableStringify from "json-stable-stringify"
-
-console.log("Initializing database...")
+let initialized
 
 const dataDirectory = pathJoin(__dirname, "../../data")
 
-console.log("\tChecking whether the data directory exists...")
-if (fsExistsSync(dataDirectory)) {
-    console.log("\t\tThe data directory exists.")
-} else {
-    console.log("\t\tThe data directory does not exist, creating...")
-    fsMkdirSync(dataDirectory)
-    console.log("\t\tThe data directory has been created.")
+function databaseInitialize(then) {
+    initialized = true
+    console.log("Initializing database...")
+    console.log("\tListing files...")
+    fsReaddir(dataDirectory, (err, files) => {
+        if (err) throw new Error(`Failed to list files: "${err}"`)
+        console.log("\tReading files...")
+        let remaining = files.length
+        files.forEach(relativeFilename => {
+            const absoluteFilename = pathJoin(dataDirectory, relativeFilename)
+            console.log(`\t\tReading "${absoluteFilename}"...`)
+            fsReadFile(absoluteFilename, { encoding: "utf8" }, (err, data) => {
+                if (err) throw new Error(`Failed to read "${absoluteFilename}": "${err}"`)
+                console.log(`\t\tRead "${absoluteFilename}", parsing...`)
+                const parsed = JSON.parse(data)
+                const id = relativeFilename.split(".")[0]
+                console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} with parent folder ID ${parsed.parentFolderId}), indexing...`)
+                indices.forEach(index => index.informOfChange(id, parsed, "\t\t\t\t"))
+                console.log(`\t\t\t\tDone.`)
+                console.log(`\t\t\tDone.`)
+                remaining--
+                if (!remaining) {
+                    console.log("\tDone.")
+                    then()
+                }
+            })
+        })
+    })
 }
 
-let databaseRootFolderId
-const databaseDataById = {}
-console.log("\tReading all existing content...")
-fsReaddirSync(dataDirectory).forEach(filename => {
-    console.log(`\t\tFile "${filename}..."`)
-    console.log("\t\t\tReading...")
-    const dataText = fsReadFileSync(pathJoin(dataDirectory, filename), { encoding: "utf8" })
-    console.log("\t\t\tParsing...")
-    const data = JSON.parse(dataText)
-    const id = filename.split(".")[0]
-    databaseDataById[id] = data
-    console.log(`\t\t\t${data.type} ${id}, parent folder ID ${data.parentFolderId}.`)
-    if (!data.parentFolderId) {
-        console.log("\t\t\tThis is the root folder.")
-        databaseRootFolderId = id
+const indices = []
+
+class databaseIndex {
+    constructor(name, getter) {
+        if (initialized) throw new Error("Cannot create new database indices after the database has ")
+        this.name = name
+        this.getter = getter
+        this.idsByValue = {}
+        this.valuesById = {}
+        indices.push(this)
     }
-})
-console.log("\t\tDone.")
 
-if (!databaseRootFolderId) {
-    console.log("\tThere is no root folder, creating...")
-    databaseRootFolderId = databaseCreate("folder", null, "\t\t")
-    console.log("\t\tDone.")
-}
+    informOfChange(id, patch, logPrefix) {
+        let newValue = this.getter(patch)
+        if (newValue === null || newValue === undefined) newValue = ""
+        const oldValue = this.valuesById[id]
 
-function databaseCreate(type, parentFolderId, logPrefix) {
-    const id = uuidV4()
-    console.log(`${logPrefix}Creating ${type} ${id} with parent folder ID ${parentFolderId}`)
-    const data = {
-        type: type,
-        parentFolderId: parentFolderId
-    }
-    const stringified = jsonStableStringify(data, { space: 4 })
-    fsWriteFileSync(pathJoin(dataDirectory, `${id}.json`), stringified)
-    databaseDataById[id] = data
-    console.log(`${logPrefix}\tDone.`)
-    return id
-}
-
-function databaseGetChildren(id, logPrefix) {
-    console.log(`${logPrefix}Getting children of ${id}...`)
-    const children = []
-    for (const childId in databaseDataById) {
-        if (databaseDataById[childId].parentFolderId == id) {
-            children.push(childId)
+        if (oldValue === undefined) {
+            console.log(`${logPrefix}${id} did not previously exist in the "${this.name}" index, added with value "${newValue}".`)
+            this.valuesById[id] = newValue
+            this.idsByValue[newValue] = this.idsByValue[newValue] || []
+            this.idsByValue[newValue].push(id)
+        } else {
+            if (oldValue == newValue) {
+                console.log(`${logPrefix}${id} already exists in the "${this.name}" index with value "${newValue}".`)
+            } else {
+                console.log(`${logPrefix}${id} already exists in the "${this.name}" index, but with value "${oldValue}"; updated to value "${newValue}".`)
+                this.valuesById[id] = newValue
+                this.idsByValue[oldValue].splice(this.idsByValue[oldValue].indexOf(id), 1)
+                this.idsByValue[newValue] = this.idsByValue[newValue] || []
+                this.idsByValue[newValue].push(id)
+            }
         }
     }
-    console.log(`${logPrefix}\tDone.`)
-    return children
 }
 
+const databaseTypeIndex = new databaseIndex("type", patch => patch.type)
+const databaseParentFolderIdIndex = new databaseIndex("parentFolderId", patch => patch.parentFolderId)
+
 export {
-    databaseRootFolderId,
-    databaseDataById,
-    databaseGetChildren
+    databaseInitialize,
+    databaseIndex,
+    databaseTypeIndex,
+    databaseParentFolderIdIndex
 }
