@@ -16,15 +16,21 @@ import state from "./state"
 
 import refreshDom from "./refresh-dom"
 
+import assetTypes from "./asset-types/index"
+
 import {
     indexGet,
     indexPatch
 } from "./index"
 
 function create() {
+    const type = Object
+        .keys(assetTypes)
+        .sort((a, b) => assetTypes[a].label.localeCompare(assetTypes[b].label))[0]
+
     modalOpen("create", {
-        type: "folder",
-        name: "Untitled Folder"
+        type: type,
+        name: `Untitled ${assetTypes[type].label}`
     })
     refreshDom()
 }
