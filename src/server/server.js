@@ -37,12 +37,13 @@ function serverInitialize(then) {
             switch (message.type) {
                 case "get": {
                     console.log(`\tHandling get...`)
-                    sendRefresh(message.id, "\t")
+                    sendRefresh(socket, message.id, false, "\t")
                     console.log(`\tDone.`)
                 } break
                 case "create": {
                     console.log(`\tHandling create...`)
                     databaseCreate(message.assetType, message.name, message.parentFolderId, "\t", id => {
+                        socketServer.clients.forEach(client => sendRefresh(client, id, client == socket, "\t"))
                         console.log("\tDone.")
                     })
                 } break
@@ -51,26 +52,27 @@ function serverInitialize(then) {
                 } break
             }
         })
-        sendRefresh(databaseParentFolderIdIndex.idsByValue[""][0], "\t")
-
-        function sendRefresh(id, logPrefix) {
-            console.log(`${logPrefix}Sending refresh of ${id}...`)
-            databaseGet(id, `${logPrefix}\t`, data => {
-                console.log(`${logPrefix}\tSending...`)
-                socket.send(JSON.stringify({
-                    type: "refresh",
-                    id: id,
-                    data: data,
-                    children: databaseParentFolderIdIndex.idsByValue[id] || []
-                }))
-                console.log(`${logPrefix}\tDone.`)
-            })
-        }
+        sendRefresh(socket, databaseParentFolderIdIndex.idsByValue[""][0], true, "\t")
     })
 
     socketServer.on("error", event => console.log(`Socket server error: ${event}`))
 
     socketServer.on("listening", () => console.log("\tThe socket server is now listening."))
+
+    function sendRefresh(socket, id, show, logPrefix) {
+        console.log(`${logPrefix}Sending refresh of ${id} (${show ? "this is to be shown" : "this is not to be shown"})...`)
+        databaseGet(id, `${logPrefix}\t`, data => {
+            console.log(`${logPrefix}\tSending...`)
+            socket.send(JSON.stringify({
+                type: "refresh",
+                id: id,
+                show: show,
+                data: data,
+                children: databaseParentFolderIdIndex.idsByValue[id] || []
+            }))
+            console.log(`${logPrefix}\tDone.`)
+        })
+    }
 
     server.listen(3333, () => {
         console.log("\tDone.")
