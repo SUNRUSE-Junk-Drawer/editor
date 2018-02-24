@@ -30,7 +30,7 @@ if (fsExistsSync(dataDirectory)) {
 }
 
 let databaseRootFolderId
-const dataById = {}
+const databaseDataById = {}
 console.log("\tReading all existing content...")
 fsReaddirSync(dataDirectory).forEach(filename => {
     console.log(`\t\tFile "${filename}..."`)
@@ -39,7 +39,7 @@ fsReaddirSync(dataDirectory).forEach(filename => {
     console.log("\t\t\tParsing...")
     const data = JSON.parse(dataText)
     const id = filename.split(".")[0]
-    dataById[id] = data
+    databaseDataById[id] = data
     console.log(`\t\t\t${data.type} ${id}, parent folder ID ${data.parentFolderId}.`)
     if (!data.parentFolderId) {
         console.log("\t\t\tThis is the root folder.")
@@ -63,11 +63,12 @@ function databaseCreate(type, parentFolderId, logPrefix) {
     }
     const stringified = jsonStableStringify(data, { space: 4 })
     fsWriteFileSync(pathJoin(dataDirectory, `${id}.json`), stringified)
-    dataById[id] = data
+    databaseDataById[id] = data
     console.log(`${logPrefix}\tDone.`)
     return id
 }
 
 export {
-    databaseRootFolderId
+    databaseRootFolderId,
+    databaseDataById
 }
