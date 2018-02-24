@@ -4,7 +4,18 @@ nav {
     background: #333;
 }
 
+nav::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
 nav button {
     display: inline-block;
     padding: 0.5rem;
+}
+
+nav input {
+    margin-top: 0.125rem;
+    margin-right: 0.125rem;
 }

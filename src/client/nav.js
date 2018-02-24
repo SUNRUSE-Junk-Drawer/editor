@@ -17,7 +17,8 @@ import state from "./state"
 import refreshDom from "./refresh-dom"
 
 import {
-    indexGet
+    indexGet,
+    indexPatch
 } from "./index"
 
 function create() {
@@ -39,6 +40,7 @@ function navRender() {
     return <nav>
         <button onclick={create}>Create...</button>
         <button onclick={goUp} disabled={!databaseDataById[state.id].parentFolderId}>Go Up</button>
+        <input type="text" value={databaseDataById[state.id].name} onchange={e => indexPatch(state.id, { name: e.target.value })} />
     </nav>
 }
 
