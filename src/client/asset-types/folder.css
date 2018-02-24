@@ -1,0 +1,31 @@
+.folder {
+    white-space: normal;
+}
+
+.folder-item {
+    margin: 0.25rem;
+    width: 10rem;
+    background: #222;
+    vertical-align: top;
+}
+
+.folder-item:disabled {
+    background: #1A1A1A;
+}
+
+.folder-item-thumbnail {
+    padding: 0.5rem;
+    height: 10rem;
+    font-size: 9rem;
+}
+
+.folder-item-name {
+    text-align: center;
+    padding-bottom: 0.5rem;
+}
+
+.folder-thumbnail {
+    font-size: 0.5em;
+    line-height: 2em;
+    text-align: center;
+}
