@@ -162,5 +162,6 @@ export {
     databaseIndex,
     databaseTypeIndex,
     databaseParentFolderIdIndex,
+    databaseCreate,
     databaseGet
 }

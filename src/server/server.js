@@ -14,6 +14,8 @@ import {
 
 import {
     databaseParentFolderIdIndex,
+    databaseTypeIndex,
+    databaseCreate,
     databaseGet
 } from "./database";
 
@@ -37,6 +39,12 @@ function serverInitialize(then) {
                     console.log(`\tHandling get...`)
                     sendRefresh(message.id, "\t")
                     console.log(`\tDone.`)
+                } break
+                case "create": {
+                    console.log(`\tHandling create...`)
+                    databaseCreate(message.assetType, message.parentFolderId, "\t", id => {
+                        console.log("\tDone.")
+                    })
                 } break
                 default: {
                     console.log(`\tUnexpected message type "${message.type}"`)
