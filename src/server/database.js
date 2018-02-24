@@ -1,4 +1,6 @@
 import {
+    exists as fsExists,
+    mkdir as fsMkdir,
     readdir as fsReaddir,
     readFile as fsReadFile,
     writeFile as fsWriteFile
@@ -21,47 +23,64 @@ const dataDirectory = pathJoin(__dirname, "../../data")
 function databaseInitialize(then) {
     initialized = true
     console.log("Initializing database...")
-    console.log("\tListing files...")
-    fsReaddir(dataDirectory, (err, files) => {
-        if (err) throw new Error(`Failed to list files: "${err}"`)
-        if (files.length) {
-            console.log("\tReading files...")
-            let remaining = files.length
-            files.forEach(relativeFilename => {
-                const absoluteFilename = pathJoin(dataDirectory, relativeFilename)
-                console.log(`\t\tReading "${absoluteFilename}"...`)
-                fsReadFile(absoluteFilename, { encoding: "utf8" }, (err, data) => {
-                    if (err) throw new Error(`Failed to read "${absoluteFilename}": "${err}"`)
-                    console.log(`\t\tRead "${absoluteFilename}", parsing...`)
-                    const parsed = JSON.parse(data)
-                    const id = relativeFilename.split(".")[0]
-                    console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} with parent folder ID ${parsed.parentFolderId}), indexing...`)
-                    indices.forEach(index => index.informOfChange(id, parsed, "\t\t\t\t"))
-                    console.log(`\t\t\t\tDone.`)
-                    console.log(`\t\t\tDone.`)
-                    remaining--
-                    if (!remaining) afterReadingFiles()
-                })
-            })
+    console.log("\tChecking whether data directory exists...")
+    fsExists(dataDirectory, exists => {
+        if (exists) {
+            console.log("\tThe data directory already exists.")
+            afterEnsuringDataDirectoryExists()
         } else {
-            console.log("\tThere are no files to read.")
-            afterReadingFiles()
+            console.log("\tThe data directory does not exist, creating...")
+            fsMkdir(dataDirectory, err => {
+                if (err) throw new Error(`Failed to create the data directory: "${err}"`)
+                console.log("\t\tDone.")
+                afterEnsuringDataDirectoryExists()
+            })
         }
 
-        function afterReadingFiles() {
-            console.log("\t\tDone.")
-            if (databaseParentFolderIdIndex.idsByValue[""]) {
-                console.log(`\tThe root folder already exists with ID ${databaseParentFolderIdIndex.idsByValue[""][0]}.`)
-                afterCheckingRootFolder()
-            } else {
-                console.log("\tThe root folder does not exist.")
-                databaseCreate("folder", null, "\t", afterCheckingRootFolder)
-            }
+        function afterEnsuringDataDirectoryExists() {
+            console.log("\tListing files...")
+            fsReaddir(dataDirectory, (err, files) => {
+                if (err) throw new Error(`Failed to list files: "${err}"`)
+                if (files.length) {
+                    console.log("\tReading files...")
+                    let remaining = files.length
+                    files.forEach(relativeFilename => {
+                        const absoluteFilename = pathJoin(dataDirectory, relativeFilename)
+                        console.log(`\t\tReading "${absoluteFilename}"...`)
+                        fsReadFile(absoluteFilename, { encoding: "utf8" }, (err, data) => {
+                            if (err) throw new Error(`Failed to read "${absoluteFilename}": "${err}"`)
+                            console.log(`\t\tRead "${absoluteFilename}", parsing...`)
+                            const parsed = JSON.parse(data)
+                            const id = relativeFilename.split(".")[0]
+                            console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} with parent folder ID ${parsed.parentFolderId}), indexing...`)
+                            indices.forEach(index => index.informOfChange(id, parsed, "\t\t\t\t"))
+                            console.log(`\t\t\t\tDone.`)
+                            console.log(`\t\t\tDone.`)
+                            remaining--
+                            if (!remaining) afterReadingFiles()
+                        })
+                    })
+                } else {
+                    console.log("\tThere are no files to read.")
+                    afterReadingFiles()
+                }
 
-            function afterCheckingRootFolder() {
-                console.log("\tDone.")
-                then()
-            }
+                function afterReadingFiles() {
+                    console.log("\t\tDone.")
+                    if (databaseParentFolderIdIndex.idsByValue[""]) {
+                        console.log(`\tThe root folder already exists with ID ${databaseParentFolderIdIndex.idsByValue[""][0]}.`)
+                        afterCheckingRootFolder()
+                    } else {
+                        console.log("\tThe root folder does not exist.")
+                        databaseCreate("folder", null, "\t", afterCheckingRootFolder)
+                    }
+
+                    function afterCheckingRootFolder() {
+                        console.log("\tDone.")
+                        then()
+                    }
+                }
+            })
         }
     })
 }
