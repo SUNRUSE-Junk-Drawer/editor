@@ -16,6 +16,9 @@ import {
 import assetTypes from "./../asset-types/index"
 
 function changeType(modal, to) {
+    if (modal.state.name == `Untitled ${assetTypes[modal.state.type].label}`) {
+        modal.state.name = `Untitled ${assetTypes[to].label}`
+    }
     modal.state.type = to
     refreshDom()
 }
