@@ -12,7 +12,13 @@ import {
     modalOpen
 } from "./modals/index"
 
+import state from "./state"
+
 import refreshDom from "./refresh-dom"
+
+import {
+    indexGet
+} from "./index"
 
 function create() {
     modalOpen("create", {
@@ -22,10 +28,17 @@ function create() {
     refreshDom()
 }
 
+function goUp() {
+    indexGet(databaseDataById[state.id].parentFolderId, true)
+    state.state = "waitingForData"
+    delete state.id
+    refreshDom()
+}
+
 function navRender() {
     return <nav>
         <button onclick={create}>Create...</button>
-        <button>Go Up</button>
+        <button onclick={goUp} disabled={!databaseDataById[state.id].parentFolderId}>Go Up</button>
     </nav>
 }
 
