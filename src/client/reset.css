@@ -68,8 +68,12 @@ button, input, select {
     color: #CCC;
 }
 
-button:not(:disabled) {
-cursor: pointer;
+button:not(:disabled), select:not(:disabled) {
+    cursor: pointer;
+}
+
+input[type="text"]:not(:disabled) {
+    cursor: text;
 }
 
 button:disabled, input:disabled, select:disabled {
