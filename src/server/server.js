@@ -16,7 +16,8 @@ import {
     databaseParentFolderIdIndex,
     databaseTypeIndex,
     databaseCreate,
-    databaseGet
+    databaseGet,
+    databasePatch
 } from "./database";
 
 function serverInitialize(then) {
@@ -47,6 +48,13 @@ function serverInitialize(then) {
                         console.log("\tDone.")
                     })
                 } break
+                case "patch": {
+                    console.log(`\tHandling patch...`)
+                    databasePatch(message.id, message.patch, "\t", () => {
+                        socketServer.clients.forEach(client => sendPatch(client, message.id, message.patch, "\t"))
+                        console.log("\tDone.")
+                    })
+                }
                 default: {
                     console.log(`\tUnexpected message type "${message.type}"`)
                 } break
@@ -72,6 +80,16 @@ function serverInitialize(then) {
             }))
             console.log(`${logPrefix}\tDone.`)
         })
+    }
+
+    function sendPatch(socket, id, patch, logPrefix) {
+        console.log(`${logPrefix}Sending patch of ${id}...`)
+        socket.send(JSON.stringify({
+            type: "patch",
+            id: id,
+            patch: patch
+        }))
+        console.log(`${logPrefix}\tDone.`)
     }
 
     server.listen(3333, () => {
