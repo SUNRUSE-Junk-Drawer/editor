@@ -1,5 +1,3 @@
-import refreshDom from "./refresh-dom"
-
 const databaseDataById = {}
 const databaseChildrenById = {}
 
@@ -16,7 +14,6 @@ function databaseRefresh(id, data, children) {
             databaseChildrenById[data.parentFolderId].push(id)
         }
     }
-    refreshDom()
 }
 
 export {

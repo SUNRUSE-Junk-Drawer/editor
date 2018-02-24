@@ -37,6 +37,7 @@ addEventListener("load", () => {
                         }
                     })
                 }
+                refreshDom()
             }
         }
     })
