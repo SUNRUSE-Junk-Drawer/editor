@@ -22,7 +22,7 @@ export default () => {
         case "waitingForData": return <div>Waiting for data...</div>
         case "ready": return <div>
             {navRender()}
-            <div class="editor">{assetTypes[databaseDataById[state.id].type].editorView(state.id)}</div>
+            <div class="editor">{assetTypes[databaseDataById[state.id].type].editorView(state.id, databaseDataById[state.id])}</div>
             {modalView()}
         </div>
     }

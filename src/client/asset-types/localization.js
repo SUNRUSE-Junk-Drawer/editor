@@ -9,7 +9,7 @@ export default {
     thumbnailView(id) {
         return <div class="localization-thumbnail">A/あ</div>
     },
-    editorView(id) {
+    editorView(id, data) {
         return <div>Localization!</div>
     }
 }

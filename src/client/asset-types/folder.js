@@ -32,7 +32,7 @@ export default {
     thumbnailView(id) {
         return <div class="folder-thumbnail">📁&#xFE0E;</div>
     },
-    editorView(id) {
+    editorView(id, data) {
         return <div class="folder">{databaseChildrenById[id].map(childId => {
             const data = databaseDataById[childId]
             if (!data) return <button class="folder-item" disabled>
