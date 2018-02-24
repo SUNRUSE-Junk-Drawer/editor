@@ -19,7 +19,7 @@ addEventListener("load", () => {
         const message = JSON.parse(event.data)
         if (state.state == "waitingForData") {
             state.state = "ready"
-            refreshDom()
+            state.id = message.id
         }
         switch (message.type) {
             case "refresh": databaseRefresh(message.id, message.data)
