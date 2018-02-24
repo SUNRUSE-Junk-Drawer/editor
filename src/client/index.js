@@ -2,7 +2,8 @@ import "./reset.css"
 import refreshDom from "./refresh-dom.js"
 import state from "./state"
 import {
-    databaseRefresh
+    databaseRefresh,
+    databaseDataById
 } from "./database";
 
 addEventListener("load", () => {
@@ -22,7 +23,19 @@ addEventListener("load", () => {
             state.id = message.id
         }
         switch (message.type) {
-            case "refresh": databaseRefresh(message.id, message.data, message.children)
+            case "refresh": {
+                databaseRefresh(message.id, message.data, message.children)
+                if (message.id == state.id) {
+                    message.children.forEach(childId => {
+                        if (!databaseDataById[childId]) {
+                            socket.send(JSON.stringify({
+                                type: "get",
+                                id: childId
+                            }))
+                        }
+                    })
+                }
+            }
         }
     })
 
