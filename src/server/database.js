@@ -14,6 +14,10 @@ import {
     v4 as uuidV4
 } from "uuid"
 
+import {
+    patchApply
+} from "./../patch"
+
 import jsonStableStringify from "json-stable-stringify"
 
 let initialized
@@ -119,6 +123,37 @@ function databaseGet(id, logPrefix, then) {
     })
 }
 
+let idsBeingPatched = []
+
+function databasePatch(id, patch, logPrefix, then) {
+    console.log(`${logPrefix}Patching ${id}...`)
+    if (idsBeingPatched.indexOf(id) != -1) {
+        console.log(`${logPrefix}\tThis is currently being patched by another thread; cancelled.`)
+    } else {
+        console.log(`${logPrefix}\tThis is not currently being patched by another thread.`)
+        idsBeingPatched.push(id)
+        const absoluteFilename = pathJoin(dataDirectory, `${id}.json`)
+        console.log(`${logPrefix}\tReading "${absoluteFilename}"...`)
+        fsReadFile(absoluteFilename, { encoding: "utf8" }, (err, data) => {
+            if (err) throw new Error(`Failed to read "${absoluteFilename}": "${err}"`)
+            console.log(`${logPrefix}\tRead "${absoluteFilename}", parsing...`)
+            let parsed = JSON.parse(data)
+            console.log(`\t\t\tParsed "${absoluteFilename}" (${parsed.type} ${id} "${parsed.name}" with parent folder ID ${parsed.parentFolderId}), applying patch...`)
+            parsed = patchApply(patch, parsed)
+            console.log(`${logPrefix}\tApplied patch, overwriting...`)
+            fsWriteFile(absoluteFilename, jsonStableStringify(parsed), err => {
+                if (err) throw new Error(`Failed to create a file to represent ${parsed.type} ${id} "${parsed.name}": "${err}"`)
+                console.log(`${logPrefix}\tFile overwritten for ${parsed.type} ${id} "${parsed.name}", re-indexing...`)
+                indices.forEach(index => index.informOfChange(id, parsed, `${logPrefix}\t\t`))
+                console.log(`${logPrefix}\t\tDone.`)
+                console.log(`${logPrefix}\tDone.`)
+                idsBeingPatched.splice(idsBeingPatched.indexOf(id), 1)
+            })
+            then(parsed)
+        })
+    }
+}
+
 const indices = []
 
 class databaseIndex {
@@ -164,5 +199,6 @@ export {
     databaseTypeIndex,
     databaseParentFolderIdIndex,
     databaseCreate,
-    databaseGet
+    databaseGet,
+    databasePatch
 }
