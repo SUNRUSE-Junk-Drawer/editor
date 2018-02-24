@@ -18,3 +18,16 @@ The diff/patch algorithm additionally considers any array to be a value as a
 whole; [1, 2, 3] -> [1, 2, 3, 4] is seen as a replacement of the former with the
 latter, not a mere append.  This is because conflicts can arise when trying to
 merge ordered lists.
+
+### Example JSON
+
+```json
+{
+    "name": "user-friendly name for the asset",
+    "type": "invariant name for the asset type",
+    "parentFolderId": "an identifier or null",
+    "data": {
+        "asset type specific": true
+    }
+}
+```
