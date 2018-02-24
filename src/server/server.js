@@ -12,7 +12,10 @@ import {
     Server as wsServer
 } from "ws"
 
-import "./database"
+import {
+    databaseDataById,
+    databaseRootFolderId
+} from "./database";
 
 const app = express()
 app.use(express.static(pathJoin(__dirname, "../../dist")))
@@ -27,7 +30,9 @@ socketServer.on("connection", (socket, request) => {
         console.log(`Received: ${message}`)
     })
     socket.send(JSON.stringify({
-
+        type: "refresh",
+        id: databaseRootFolderId,
+        data: databaseDataById[databaseRootFolderId]
     }))
 })
 
