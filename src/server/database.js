@@ -55,10 +55,7 @@ function databaseInitialize(then) {
                 afterCheckingRootFolder()
             } else {
                 console.log("\tThe root folder does not exist.")
-                databaseCreate("folder", null, "\t", id => {
-                    rootFolderId = id
-                    afterCheckingRootFolder()
-                })
+                databaseCreate("folder", null, "\t", afterCheckingRootFolder)
             }
 
             function afterCheckingRootFolder() {
