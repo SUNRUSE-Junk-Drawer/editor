@@ -68,7 +68,20 @@ function databaseCreate(type, parentFolderId, logPrefix) {
     return id
 }
 
+function databaseGetChildren(id, logPrefix) {
+    console.log(`${logPrefix}Getting children of ${id}...`)
+    const children = []
+    for (const childId in databaseDataById) {
+        if (databaseDataById[childId].parentFolderId == id) {
+            children.push(childId)
+        }
+    }
+    console.log(`${logPrefix}\tDone.`)
+    return children
+}
+
 export {
     databaseRootFolderId,
-    databaseDataById
+    databaseDataById,
+    databaseGetChildren
 }

@@ -14,7 +14,8 @@ import {
 
 import {
     databaseDataById,
-    databaseRootFolderId
+    databaseRootFolderId,
+    databaseGetChildren
 } from "./database";
 
 const app = express()
@@ -32,7 +33,8 @@ socketServer.on("connection", (socket, request) => {
     socket.send(JSON.stringify({
         type: "refresh",
         id: databaseRootFolderId,
-        data: databaseDataById[databaseRootFolderId]
+        data: databaseDataById[databaseRootFolderId],
+        children: databaseGetChildren(databaseRootFolderId, "")
     }))
 })
 
