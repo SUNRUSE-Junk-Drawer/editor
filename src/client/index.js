@@ -22,7 +22,7 @@ addEventListener("load", () => {
             state.id = message.id
         }
         switch (message.type) {
-            case "refresh": databaseRefresh(message.id, message.data)
+            case "refresh": databaseRefresh(message.id, message.data, message.children)
         }
     })
 
