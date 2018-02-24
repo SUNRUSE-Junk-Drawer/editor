@@ -12,11 +12,9 @@ import {
     Server as wsServer
 } from "ws"
 
-import {
-    databaseInitialize
-} from "./database"
+function serverInitialize(then) {
+    console.log("Initializing server...")
 
-databaseInitialize(() => {
     const app = express()
     app.use(express.static(pathJoin(__dirname, "../../dist")))
 
@@ -54,5 +52,14 @@ databaseInitialize(() => {
 
     socketServer.on("error", event => console.log(`Socket server error: ${event}`))
 
-    server.listen(3333, () => console.log("Server now running."))
-})
+    socketServer.on("listening", () => console.log("\tThe socket server is now listening."))
+
+    server.listen(3333, () => {
+        console.log("\tDone.")
+        then()
+    })
+}
+
+export {
+    serverInitialize
+}
