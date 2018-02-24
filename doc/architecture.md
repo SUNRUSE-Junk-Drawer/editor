@@ -31,3 +31,20 @@ merge ordered lists.
     }
 }
 ```
+
+### Adding new types
+
+Existing asset types are in `src/client/asset-types`; each is a module 
+including:
+
+| Name          | Description                                                                    |
+| ------------- | ------------------------------------------------------------------------------ |
+| label         | User-friendly label for the asset type.                                        |
+| thumbnailView | JSX/Picodom view used to render a 1x1em preview an instance of the asset type. |
+| editorView    | JSX/Picodom view used to render an editor for an instance of the asset type.   |
+
+These must then be added to the `src/client/asset-types/index.js` module, using
+its invariant type name.
+
+Adding documentation for new or altered types to `doc/asset-types` is 
+recommended.
