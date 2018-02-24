@@ -22,7 +22,20 @@ function modalView() {
     </div>)}</div>
 }
 
+let nextModalId = 1
+
+function modalOpen(type, modalState) {
+    state.modals.push({
+        type: type,
+        id: nextModalId,
+        state: modalState
+    })
+
+    nextModalId++
+}
+
 export {
     modalTypes,
-    modalView
+    modalView,
+    modalOpen
 }

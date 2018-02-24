@@ -8,16 +8,16 @@ import {
     databaseDataById
 } from "./database"
 
-import state from "./state"
+import {
+    modalOpen
+} from "./modals/index"
+
 import refreshDom from "./refresh-dom"
 
 function create() {
-    state.modals.push({
-        type: "create",
-        state: {
-            type: "folder",
-            name: "Untitled Folder"
-        }
+    modalOpen("create", {
+        type: "folder",
+        name: "Untitled Folder"
     })
     refreshDom()
 }
