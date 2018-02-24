@@ -105,6 +105,19 @@ function databaseCreate(type, parentFolderId, logPrefix, then) {
     })
 }
 
+function databaseGet(id, logPrefix, then) {
+    console.log(`${logPrefix}Getting ${id}...`)
+    const absoluteFilename = pathJoin(dataDirectory, `${id}.json`)
+    console.log(`${logPrefix}\tReading "${absoluteFilename}"...`)
+    fsReadFile(absoluteFilename, { encoding: "utf8" }, (err, data) => {
+        if (err) throw new Error(`Failed to read "${absoluteFilename}": "${err}"`)
+        console.log(`${logPrefix}\tRead "${absoluteFilename}", parsing...`)
+        const parsed = JSON.parse(data)
+        console.log(`${logPrefix}\tDone.`)
+        then(parsed)
+    })
+}
+
 const indices = []
 
 class databaseIndex {
@@ -148,5 +161,6 @@ export {
     databaseInitialize,
     databaseIndex,
     databaseTypeIndex,
-    databaseParentFolderIdIndex
+    databaseParentFolderIdIndex,
+    databaseGet
 }
