@@ -53,7 +53,7 @@ function serverInitialize(then) {
                     type: "refresh",
                     id: id,
                     data: data,
-                    children: databaseParentFolderIdIndex.idsByValue[id]
+                    children: databaseParentFolderIdIndex.idsByValue[id] || []
                 }))
                 console.log(`${logPrefix}\tDone.`)
             })
