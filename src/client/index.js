@@ -6,10 +6,12 @@ import {
     databaseDataById
 } from "./database";
 
+let socket
+
 addEventListener("load", () => {
     state.state = "connecting"
     refreshDom()
-    const socket = new WebSocket(`ws://${location.host}`)
+    socket = new WebSocket(`ws://${location.host}`)
 
     socket.addEventListener("open", () => {
         state.state = "waitingForData"
@@ -41,3 +43,16 @@ addEventListener("load", () => {
 
     socket.addEventListener("error", event => console.log(`A socket error occurred: ${event}`))
 })
+
+function indexCreate(type, name, parentFolderId) {
+    socket.send(JSON.stringify({
+        type: "create",
+        assetType: type,
+        name: name,
+        parentFolderId: parentFolderId
+    }))
+}
+
+export {
+    indexCreate
+}
