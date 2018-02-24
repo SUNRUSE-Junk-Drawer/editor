@@ -1,3 +1,4 @@
 export default {
-    state: "loading"
+    state: "loading",
+    modals: []
 }

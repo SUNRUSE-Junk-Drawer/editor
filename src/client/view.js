@@ -11,6 +11,9 @@ import {
 } from "./database"
 
 import assetTypes from "./asset-types/index"
+import {
+    modalView
+} from "./modals/index"
 
 export default () => {
     switch (state.state) {
@@ -20,6 +23,7 @@ export default () => {
         case "ready": return <div>
             {navRender()}
             <div class="editor">{assetTypes[databaseDataById[state.id].type].editorView(state.id)}</div>
+            {modalView()}
         </div>
     }
 }
