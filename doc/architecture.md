@@ -48,3 +48,18 @@ its invariant type name.
 
 Adding documentation for new or altered types to `doc/asset-types` is 
 recommended.
+
+## Server-client communication
+
+The server is the "one source of the truth" for assets; they are created, and
+modified there.  Clients consume events sent back to synchronize their cache of
+the assets with those of the server.
+
+### Event flow for update
+
+- The user makes a change.
+- The client-side Picodom view triggers an event.
+- A message is sent to the server via a websocket.
+- The server applies the patch to its local copy, persisting it to disk.
+- The patch is then distributed to all clients via websockets.
+- Clients apply the patch to their local copies, and update their Picodom views.
