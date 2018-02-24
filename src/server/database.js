@@ -80,6 +80,7 @@ function databaseCreate(type, parentFolderId, logPrefix, then) {
         if (err) throw new Error(`Failed to create a file to represent ${type} ${id}: "${err}"`)
         console.log(`${logPrefix}\tFile written for ${type} ${id}, indexing...`)
         indices.forEach(index => index.informOfChange(id, data, `${logPrefix}\t\t`))
+        console.log(`${logPrefix}\t\tDone.`)
         console.log(`${logPrefix}\tDone.`)
         then(id)
     })
