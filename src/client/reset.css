@@ -27,7 +27,7 @@
 }
 
 html {
-  color: white;
+  color: #DDD;
   background: black;
   font-family: sans-serif;
   cursor: default;
@@ -65,7 +65,7 @@ button::-moz-focus-inner {
 }
 
 button, input, select {
-    color: #AAA;
+    color: #CCC;
 }
 
 button:not(:disabled) {
@@ -73,11 +73,11 @@ cursor: pointer;
 }
 
 button:disabled, input:disabled, select:disabled {
-    color: #555;
+    color: #999;
 }
 
 button:not(:disabled):hover, input:not(:disabled):hover, select:not(:disabled):hover {
-    color: #DDD;
+    color: #EEE;
 }
 
 button:not(:disabled):active, input:not(:disabled):active, select:not(:disabled):active {
@@ -99,7 +99,6 @@ label {
   margin-top: 0.3125rem;
   margin-bottom: 0.3125rem;
   margin-right: 0.5rem;
-  color: #777;
 }
 
 select, input {
