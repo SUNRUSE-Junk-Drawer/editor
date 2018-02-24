@@ -37,7 +37,7 @@ function serverInitialize(then) {
             switch (message.type) {
                 case "get": {
                     console.log(`\tHandling get...`)
-                    sendRefresh(socket, message.id, false, "\t")
+                    sendRefresh(socket, message.id, message.show, "\t")
                     console.log(`\tDone.`)
                 } break
                 case "create": {

@@ -9,7 +9,19 @@ import {
     databaseChildrenById
 } from "./../database"
 
+import {
+    indexGet
+} from "./../index"
+
 import assetTypes from "./index"
+
+function itemClicked(id) {
+    indexGet(id, true)
+    state.state = "waitingForData"
+    delete state.id
+    state.modals.pop()
+    refreshDom()
+}
 
 export default {
     label: "Folder",
@@ -23,7 +35,7 @@ export default {
                 <div class="folder-item-thumbnail"></div>
                 <div class="folder-item-name">Loading...</div>
             </button>
-            return <button class="folder-item">
+            return <button class="folder-item" onclick={() => itemClicked(childId)}>
                 <div class="folder-item-thumbnail">{assetTypes[data.type].thumbnailView(childId)}</div>
                 <div class="folder-item-name">{data.name}</div>
             </button>

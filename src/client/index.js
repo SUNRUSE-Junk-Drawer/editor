@@ -54,6 +54,15 @@ function indexCreate(type, name, parentFolderId) {
     }))
 }
 
+function indexGet(id, show) {
+    socket.send(JSON.stringify({
+        type: "get",
+        id: id,
+        show: show
+    }))
+}
+
 export {
-    indexCreate
+    indexCreate,
+    indexGet
 }
