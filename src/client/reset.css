@@ -64,19 +64,48 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-button {
+button, input, select {
     color: #AAA;
 }
 
-button:disabled {
+button:not(:disabled) {
+cursor: pointer;
+}
+
+button:disabled, input:disabled, select:disabled {
     color: #555;
 }
 
-button:not(:disabled):hover {
+button:not(:disabled):hover, input:not(:disabled):hover, select:not(:disabled):hover {
     color: #DDD;
-    cursor: pointer;
 }
 
-button:not(:disabled):active {
+button:not(:disabled):active, input:not(:disabled):active, select:not(:disabled):active {
     color: #FFF;
+}
+
+.field {
+  margin: 0.5rem;
+}
+
+.field::after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+label {
+  float: left;
+  margin-top: 0.3125rem;
+  margin-bottom: 0.3125rem;
+  margin-right: 0.5rem;
+  color: #777;
+}
+
+select, input {
+  float: right;
+  width: 15rem;
+  background: #000;
+  border: 0.0625rem solid #555;
+  padding: 0.25rem;
 }
