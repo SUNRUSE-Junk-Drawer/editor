@@ -1,3 +1,7 @@
+import {
+    patchApply
+} from "./../patch"
+
 const databaseDataById = {}
 const databaseChildrenById = {}
 
@@ -16,8 +20,15 @@ function databaseRefresh(id, data, children) {
     }
 }
 
+function databasePatch(id, patch) {
+    const data = databaseDataById[id]
+    if (!data) return
+    databaseDataById[id] = patchApply(patch, data)
+}
+
 export {
     databaseDataById,
     databaseChildrenById,
-    databaseRefresh
+    databaseRefresh,
+    databasePatch
 }

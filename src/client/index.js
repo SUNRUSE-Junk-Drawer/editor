@@ -3,6 +3,7 @@ import refreshDom from "./refresh-dom.js"
 import state from "./state"
 import {
     databaseRefresh,
+    databasePatch,
     databaseDataById
 } from "./database";
 
@@ -38,7 +39,12 @@ addEventListener("load", () => {
                     })
                 }
                 refreshDom()
-            }
+            } break
+
+            case "patch": {
+                databasePatch(message.id, message.patch)
+                refreshDom()
+            } break
         }
     })
 
@@ -62,7 +68,16 @@ function indexGet(id, show) {
     }))
 }
 
+function indexPatch(id, patch) {
+    socket.send(JSON.stringify({
+        type: "patch",
+        id: id,
+        patch: patch
+    }))
+}
+
 export {
     indexCreate,
-    indexGet
+    indexGet,
+    indexPatch
 }
