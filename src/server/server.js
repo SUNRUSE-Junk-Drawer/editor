@@ -60,7 +60,7 @@ function serverInitialize(then) {
                 } break
             }
         })
-        sendRefresh(socket, databaseParentFolderIdIndex.idsByValue[""][0], true, true, "\t")
+        sendRefresh(socket, databaseParentFolderIdIndex.idsByValue["null"][0], true, true, "\t")
     })
 
     socketServer.on("error", event => console.log(`Socket server error: ${event}`))

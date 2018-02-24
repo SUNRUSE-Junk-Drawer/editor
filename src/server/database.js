@@ -71,8 +71,8 @@ function databaseInitialize(then) {
 
                 function afterReadingFiles() {
                     console.log("\t\tDone.")
-                    if (databaseParentFolderIdIndex.idsByValue[""]) {
-                        console.log(`\tThe root folder already exists with ID ${databaseParentFolderIdIndex.idsByValue[""][0]}.`)
+                    if (databaseParentFolderIdIndex.idsByValue["null"]) {
+                        console.log(`\tThe root folder already exists with ID ${databaseParentFolderIdIndex.idsByValue["null"][0]}.`)
                         afterCheckingRootFolder()
                     } else {
                         console.log("\tThe root folder does not exist.")
@@ -168,7 +168,8 @@ class databaseIndex {
 
     informOfChange(id, patch, logPrefix) {
         let newValue = this.getter(patch)
-        if (newValue === null || newValue === undefined) newValue = ""
+        if (newValue === undefined) return
+        newValue = `${newValue}`
         const oldValue = this.valuesById[id]
 
         if (oldValue === undefined) {

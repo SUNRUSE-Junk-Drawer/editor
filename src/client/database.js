@@ -35,7 +35,8 @@ class databaseIndex {
 
     informOfChange(id, patch) {
         let newValue = this.getter(patch)
-        if (newValue === null || newValue === undefined) newValue = ""
+        if (newValue === undefined) return
+        newValue = `${newValue}`
         const oldValue = this.valuesById[id]
 
         if (oldValue === undefined) {
