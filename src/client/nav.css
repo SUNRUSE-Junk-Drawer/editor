@@ -1,0 +1,10 @@
+nav {
+    position: sticky;
+    top: 0;
+    background: #333;
+}
+
+nav button {
+    display: inline-block;
+    padding: 0.5rem;
+}
