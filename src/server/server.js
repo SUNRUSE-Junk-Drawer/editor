@@ -12,6 +12,11 @@ import {
     Server as wsServer
 } from "ws"
 
+import {
+    databaseParentFolderIdIndex,
+    databaseGet
+} from "./database";
+
 function serverInitialize(then) {
     console.log("Initializing server...")
 
@@ -22,6 +27,7 @@ function serverInitialize(then) {
     const socketServer = new wsServer({ server })
 
     socketServer.on("connection", (socket, request) => {
+        console.log("New connection.")
         socket.on("error", event => console.log(`Socket error: ${event}`))
         socket.on("message", event => {
             const message = JSON.parse(event)
@@ -29,12 +35,7 @@ function serverInitialize(then) {
             switch (message.type) {
                 case "get": {
                     console.log(`\tHandling get...`)
-                    socket.send(JSON.stringify({
-                        type: "refresh",
-                        id: message.id,
-                        data: databaseDataById[message.id],
-                        children: databaseGetChildren(message.id, "\t")
-                    }))
+                    sendRefresh(message.id, "\t")
                     console.log(`\tDone.`)
                 } break
                 default: {
@@ -42,12 +43,21 @@ function serverInitialize(then) {
                 } break
             }
         })
-        socket.send(JSON.stringify({
-            type: "refresh",
-            id: databaseRootFolderId,
-            data: databaseDataById[databaseRootFolderId],
-            children: databaseGetChildren(databaseRootFolderId, "")
-        }))
+        sendRefresh(databaseParentFolderIdIndex.idsByValue[""][0], "\t")
+
+        function sendRefresh(id, logPrefix) {
+            console.log(`${logPrefix}Sending refresh of ${id}...`)
+            databaseGet(id, `${logPrefix}\t`, data => {
+                console.log(`${logPrefix}\tSending...`)
+                socket.send(JSON.stringify({
+                    type: "refresh",
+                    id: id,
+                    data: data,
+                    children: databaseParentFolderIdIndex.idsByValue[id]
+                }))
+                console.log(`${logPrefix}\tDone.`)
+            })
+        }
     })
 
     socketServer.on("error", event => console.log(`Socket server error: ${event}`))
