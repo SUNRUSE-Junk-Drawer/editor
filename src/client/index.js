@@ -20,12 +20,12 @@ addEventListener("load", () => {
 
     socket.addEventListener("message", event => {
         const message = JSON.parse(event.data)
-        if (state.state == "waitingForData") {
-            state.state = "ready"
-            state.id = message.id
-        }
         switch (message.type) {
             case "refresh": {
+                if (message.show) {
+                    state.state = "ready"
+                    state.id = message.id
+                }
                 databaseRefresh(message.id, message.data, message.children)
                 if (message.id == state.id) {
                     message.children.forEach(childId => {
