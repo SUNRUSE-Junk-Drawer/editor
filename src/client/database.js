@@ -12,8 +12,8 @@ function databaseRefresh(id, data, children) {
             const index = databaseChildrenById[parentId].indexOf(id)
             if (index != -1) databaseChildrenById[parentId].splice(index, 1)
         }
-        if (databaseChildrenById[parentId] && databaseChildrenById[parentId].indexOf(id) == -1) {
-            databaseChildrenById[parentId].push(id)
+        if (databaseChildrenById[data.parentFolderId] && databaseChildrenById[data.parentFolderId].indexOf(id) == -1) {
+            databaseChildrenById[data.parentFolderId].push(id)
         }
     }
     refreshDom()
