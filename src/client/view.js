@@ -1,3 +1,5 @@
+import "./editor.css"
+
 import { h as picodomH } from "picodom"
 import state from "./state"
 
