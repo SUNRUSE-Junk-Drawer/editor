@@ -1,11 +1,18 @@
 import {
     readdir as fsReaddir,
-    readFile as fsReadFile
+    readFile as fsReadFile,
+    writeFile as fsWriteFile
 } from "fs"
 
 import {
     join as pathJoin
 } from "path"
+
+import {
+    v4 as uuidV4
+} from "uuid"
+
+import jsonStableStringify from "json-stable-stringify"
 
 let initialized
 
@@ -33,11 +40,44 @@ function databaseInitialize(then) {
                 console.log(`\t\t\tDone.`)
                 remaining--
                 if (!remaining) {
-                    console.log("\tDone.")
-                    then()
+                    console.log("\t\tDone.")
+                    if (databaseParentFolderIdIndex.idsByValue[""]) {
+                        console.log(`\tThe root folder already exists with ID ${databaseParentFolderIdIndex.idsByValue[""][0]}.`)
+                        afterCheckingRootFolder()
+                    } else {
+                        console.log("\tThe root folder does not exist.")
+                        databaseCreate("folder", null, "\t", id => {
+                            rootFolderId = id
+                            afterCheckingRootFolder()
+                        })
+                    }
+
+                    function afterCheckingRootFolder() {
+                        console.log("\tDone.")
+                        then()
+                    }
                 }
             })
         })
+    })
+}
+
+function databaseCreate(type, parentFolderId, logPrefix, then) {
+    const id = uuidV4()
+    console.log(`${logPrefix}Creating ${type} ${id} with parent folder ID ${parentFolderId}...`)
+
+    const data = {
+        type: type,
+        parentFolderId: parentFolderId,
+        data: {}
+    }
+
+    fsWriteFile(pathJoin(dataDirectory, `${id}.json`), jsonStableStringify(data), err => {
+        if (err) throw new Error(`Failed to create a file to represent ${type} ${id}: "${err}"`)
+        console.log(`${logPrefix}\tFile written for ${type} ${id}, indexing...`)
+        indices.forEach(index => index.informOfChange(id, data, `${logPrefix}\t\t`))
+        console.log(`${logPrefix}\tDone.`)
+        then(id)
     })
 }
 
