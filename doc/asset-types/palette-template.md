@@ -8,6 +8,6 @@
             "deleted": false
         }
     },
-    "colors-order": ["an order for the keys of 'colors'"]
+    "colorsOrder": ["an order for the keys of 'colors'"]
 }
 ```

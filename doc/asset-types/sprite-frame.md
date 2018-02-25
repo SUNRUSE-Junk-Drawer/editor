@@ -2,10 +2,10 @@
 
 ```json
 {
-    "palette-template-id": "the identifier of the palette template this uses colors from",
-    "palette-instance-id": "the identifier of the palette instance to use by default",
-    "onion-skin": {
-        "sprite-frame": "the identifier of a sprite frame to show as an onion skin",
+    "paletteTemplateId": "the identifier of the palette template this uses colors from",
+    "paletteInstanceId": "the identifier of the palette instance to use by default",
+    "onionSkin": {
+        "spriteFrame": "the identifier of a sprite frame to show as an onion skin",
         "visible": false
     },
     "layers": {
@@ -22,12 +22,12 @@
                             "y": 16.4
                         }
                     },
-                    "vertices-order": ["an order for the keys of 'vertices' (forming an edge loop)"]
+                    "verticesOrder": ["an order for the keys of 'vertices' (forming an edge loop)"]
                 }
             },
-            "shapes-order": ["an order for the keys of 'shapes' (back-to-front)"]
+            "shapesOrder": ["an order for the keys of 'shapes' (back-to-front)"]
         }
     },
-    "layers-order": ["an order for the keys of 'layers' (back-to-front)"]
+    "layersOrder": ["an order for the keys of 'layers' (back-to-front)"]
 }
 ```

@@ -2,7 +2,7 @@
 
 ```json
 {
-    "palette-template-id": "the identifier of the palette template this is an instance of",
+    "paletteTemplateId": "the identifier of the palette template this is an instance of",
     "colors": {
         "a key of the palette template's 'colors'": {
             "red": 188,
