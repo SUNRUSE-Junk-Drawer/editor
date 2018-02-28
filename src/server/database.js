@@ -158,7 +158,7 @@ const indices = []
 
 class databaseIndex {
     constructor(name, getter) {
-        if (initialized) throw new Error("Cannot create new database indices after the database has ")
+        if (initialized) throw new Error("Cannot create new database indices after the database has been initialized")
         this.name = name
         this.getter = getter
         this.idsByValue = {}
