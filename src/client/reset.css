@@ -90,6 +90,7 @@ button:not(:disabled):active, input:not(:disabled):active, select:not(:disabled)
 
 .field {
   margin: 0.5rem;
+  margin-left: 0;
 }
 
 .field::after {
@@ -98,10 +99,19 @@ button:not(:disabled):active, input:not(:disabled):active, select:not(:disabled)
   clear: both;
 }
 
+.field > button {
+  float: left;
+  text-align: center;
+  margin: 0.3125rem;
+  width: 1em;
+  height: 1em;
+}
+
 label {
   float: left;
   margin-top: 0.3125rem;
   margin-bottom: 0.3125rem;
+  margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 
