@@ -14,6 +14,13 @@ function isNonObject(value) {
         || Array.isArray(value)
 }
 
+function patchOneKey(key, value) {
+    const obj = {}
+    obj[key] = value
+    return obj
+}
+
 export {
-    patchApply
+    patchApply,
+    patchOneKey
 }
